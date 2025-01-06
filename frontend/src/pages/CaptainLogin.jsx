@@ -7,7 +7,7 @@ const CaptainLogin = () => {
     // Two way data binding
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [captainData, setCaptainData] = useState('')
+    const [captainData, setCaptainData] = useState({})
   
   
     const submitHandler = (e) => {
