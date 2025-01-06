@@ -1,6 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
 import { CaptainDataContext } from '../context/CaptainContext'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
@@ -9,115 +8,114 @@ const CaptainSignup = () => {
 
   const navigate = useNavigate()
 
-  const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [firstName, setFirstName] = useState('')
-    const [lastName, setLastName] = useState('')
+  const [ email, setEmail ] = useState('')
+  const [ password, setPassword ] = useState('')
+  const [ firstName, setFirstName ] = useState('')
+  const [ lastName, setLastName ] = useState('')
+
+  const [ vehicleColor, setVehicleColor ] = useState('')
+  const [ vehiclePlate, setVehiclePlate ] = useState('')
+  const [ vehicleCapacity, setVehicleCapacity ] = useState('')
+  const [ vehicleType, setVehicleType ] = useState('')
 
 
-    const [vehicleColor,setVehicleColor] = useState('')
-    const [vehiclePlate,setVehiclePlate] = useState('')
-    const [vehicleCapacity,setVehicleCapacity] = useState('')
-    const [vehicleType,setVehicleType] = useState('')
+  const { captain, setCaptain } = React.useContext(CaptainDataContext)
 
-  
-    const {captain,setCaptain} = React.useContext(CaptainDataContext)
 
-    const submitHandler = async (e)=>{
-      e.preventDefault()
-  
-      const captainData = {
-        fullname : {
-          firstname:firstName,
-          lastname:lastName
-        },
-        password:password,
-        email:email,
-        Vehicle:{
-          color:vehicleColor,
-          plate:vehiclePlate,
-          capacity:vehicleCapacity,
-          vehicleType:vehicleType
-        }
+  const submitHandler = async (e) => {
+    e.preventDefault()
+    const captainData = {
+      fullname: {
+        firstname: firstName,
+        lastname: lastName
+      },
+      email: email,
+      password: password,
+      vehicle: {
+        color: vehicleColor,
+        plate: vehiclePlate,
+        capacity: vehicleCapacity,
+        vehicleType: vehicleType
       }
-
-      const response = (`${import.meta.env.VITE_BASE_URL}/captains/register`,captainData)
-
-      if(response.status===201){
-        const data = response.data
-        setCaptain(data.captain)
-        localStorage.setItem('token',data.token)
-        navigate('/captain-home')
-      }
-      
-      setEmail('')
-      setPassword('')
-      setFirstName('')
-      setLastName('')
-      setVehicleColor('')
-      setVehiclePlate('')
-      setVehicleCapacity('')
-      setVehicleType('')
     }
+
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/register`, captainData)
+
+    if (response.status === 201) {
+      const data = response.data
+      setCaptain(data.captain)
+      localStorage.setItem('token', data.token)
+      navigate('/captain-home')
+    }
+
+    setEmail('')
+    setFirstName('')
+    setLastName('')
+    setPassword('')
+    setVehicleColor('')
+    setVehiclePlate('')
+    setVehicleCapacity('')
+    setVehicleType('')
+
+  }
   return (
-    <div>
-    <div className='py-5 px-5 flex flex-col justify-between h-screen'>
+    <div className='py-5 px-5 h-screen flex flex-col justify-between'>
       <div>
-      <img className='w-20 mb-3' src="https://www.svgrepo.com/show/505031/uber-driver.svg" alt="Uber Logo" />
-
-
+        <img className='w-20 mb-3' src="https://www.svgrepo.com/show/505031/uber-driver.svg" alt="" />
 
         <form onSubmit={(e) => {
           submitHandler(e)
         }}>
 
-          <h3 className='text-lg w-1/2 font-medium mb-2'>What's your Name?</h3>
-
-
-          <div className='flex gap-4 mb-6'>
-            <input type="text"
-              required className='bg-[#eeeeee] w-1/2 rounded px-4 py-2 border text-lg placeholder:text-base'
-              placeholder='First Name'
-              value={firstName} 
-              onChange={(e)=>{
+          <h3 className='text-lg w-full  font-medium mb-2'>What's our Captain's name</h3>
+          <div className='flex gap-4 mb-7'>
+            <input
+              required
+              className='bg-[#eeeeee] w-1/2 rounded-lg px-4 py-2 border  text-lg placeholder:text-base'
+              type="text"
+              placeholder='First name'
+              value={firstName}
+              onChange={(e) => {
                 setFirstName(e.target.value)
               }}
-              />
-
-            <input type="text"
-              required className='bg-[#eeeeee] w-1/2 rounded px-4 py-2 border text-lg placeholder:text-base'
-              placeholder='Last Name'
-              value={lastName} 
-              onChange={(e)=>{
+            />
+            <input
+              required
+              className='bg-[#eeeeee] w-1/2  rounded-lg px-4 py-2 border  text-lg placeholder:text-base'
+              type="text"
+              placeholder='Last name'
+              value={lastName}
+              onChange={(e) => {
                 setLastName(e.target.value)
               }}
-              />
+            />
           </div>
 
-
-          <h3 className='text-lg font-medium mb-2'>What's your email?</h3>
-
-          <input type="email"
-            required className='bg-[#eeeeee] mb-6 rounded px-4 py-2 border w-full text-lg placeholder:text-base'
-            placeholder='example@gmail.com' 
-            value={email} 
-            onChange={(e)=>{
+          <h3 className='text-lg font-medium mb-2'>What's our Captain's email</h3>
+          <input
+            required
+            value={email}
+            onChange={(e) => {
               setEmail(e.target.value)
             }}
-            />
+            className='bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
+            type="email"
+            placeholder='email@example.com'
+          />
 
           <h3 className='text-lg font-medium mb-2'>Enter Password</h3>
 
-          <input type="password" required
-            className='bg-[#eeeeee] mb-6 rounded px-4 py-2 border w-full text-lg placeholder:text-base'
-            placeholder='Password'
-            value={password} 
-            onChange={(e)=>{
+          <input
+            className='bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
+            value={password}
+            onChange={(e) => {
               setPassword(e.target.value)
             }}
-            />
+            required type="password"
+            placeholder='password'
+          />
 
-<h3 className='text-lg font-medium mb-2'>Vehicle Information</h3>
+          <h3 className='text-lg font-medium mb-2'>Vehicle Information</h3>
           <div className='flex gap-4 mb-7'>
             <input
               required
@@ -167,20 +165,17 @@ const CaptainSignup = () => {
           </div>
 
           <button
-            className='bg-[#111] text-white font-semibold mb-3 rounded px-4 py-2 w-full text-lg placeholder:text-size-base'
-          >Create Account</button>
+            className='bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base'
+          >Create Captain Account</button>
 
         </form>
-
-        <p className='text-center'>Already have a Account?<Link to='/captain-login' className='text-blue-600'> Login</Link> </p>
-
+        <p className='text-center'>Already have a account? <Link to='/captain-login' className='text-blue-600'>Login here</Link></p>
       </div>
       <div>
-        <p className='text-[10px] leading-tight'> This site is protected by reCAPTCHA and <span className='underline'> Google Privacy Policy </span>and <span className='underline'>Terms of Service apply</span>. </p>
+        <p className='text-[10px] mt-6 leading-tight'>This site is protected by reCAPTCHA and the <span className='underline'>Google Privacy
+          Policy</span> and <span className='underline'>Terms of Service apply</span>.</p>
       </div>
-
     </div>
-  </div>
   )
 }
 
